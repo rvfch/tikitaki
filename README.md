@@ -117,52 +117,6 @@ All data lives in `~/.cli-timer/`:
 | `history.json`  | All time entries with ticket, duration, pause intervals, sync status |
 | `settings.json` | Integration credentials, auto-sync toggle, minimum daily hours       |
 
----
-
-## Project Structure
-
-```
-src/
-  index.tsx                  # Entry point: render(<App />)
-  types/index.ts             # Shared TypeScript types
-  storage/
-    paths.ts                 # ~/.cli-timer/ directory management
-    settings.ts              # Settings read/write
-    history.ts               # History read/write/query
-  commands/
-    parser.ts                # Slash command parser
-    start.ts                 # /start
-    pause.ts                 # /pause
-    resume.ts                # /resume
-    stop.ts                  # /stop, /stop:discard + elapsed calc
-    history.ts               # /history variants
-    log.ts                   # /log (manual entry)
-    sync.ts                  # /sync
-    syncCheck.ts             # /sync:check
-    settings.ts              # /settings:integrations
-    help.ts                  # /help text
-  integrations/
-    jira.ts                  # Jira worklog API
-    clockify.ts              # Clockify time entry API
-    types.ts                 # Integration-specific types
-  components/
-    App.tsx                  # Root: state machine + command dispatch
-    CommandInput.tsx          # Text input with prompt
-    TimerDisplay.tsx          # Live-updating elapsed counter
-    StatusBar.tsx             # Mode indicator
-    HistoryTable.tsx          # Formatted history with daily totals
-    HelpView.tsx              # Help text display
-    SettingsPrompts.tsx       # Multi-step integration config
-    LogEntryPrompts.tsx       # Multi-step manual log
-    SyncReport.tsx            # Sync results display
-  utils/
-    formatDuration.ts        # Seconds to "1h 23m 45s"
-    formatDate.ts            # Date display helpers
-    dateFilters.ts           # Week/month/date range filters
-```
-
----
-
 ## Development
 
 ```bash
