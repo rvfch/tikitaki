@@ -1,0 +1,37 @@
+{
+  "name": "tikitaki",
+  "version": "0.1.0",
+  "author": "Roman Filatov <rvfchdev@gmail.com>",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "tikitaki": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.tsx",
+    "build": "tsc",
+    "test": "vitest",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "date-fns": "^4.1.0",
+    "ink": "^5.1.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^18.3.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^25.4.0",
+    "@types/react": "^18.3.18",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.8.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.57.0",
+    "vitest": "^3.0.5"
+  }
+}
