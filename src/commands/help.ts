@@ -20,4 +20,4 @@ export const HELP_TEXT = `Commands:
 
   /help                          Show this help message
   /quit                          Exit the application
-  `;
+  `

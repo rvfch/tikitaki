@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { getSettingsPath } from "./paths.js";
-import type { Settings } from "../types/index.js";
+import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import { getSettingsPath } from './paths.js'
+import type { Settings } from '../types/index.js'
 
 const DEFAULT_SETTINGS: Settings = {
   autoSync: false,
@@ -9,21 +9,21 @@ const DEFAULT_SETTINGS: Settings = {
     jira: null,
     clockify: null,
   },
-};
+}
 
 export function loadSettings(): Settings {
-  const path = getSettingsPath();
+  const path = getSettingsPath()
   if (!existsSync(path)) {
-    return { ...DEFAULT_SETTINGS };
+    return { ...DEFAULT_SETTINGS }
   }
   try {
-    const raw = readFileSync(path, "utf-8");
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const raw = readFileSync(path, 'utf-8')
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) }
   } catch {
-    return { ...DEFAULT_SETTINGS };
+    return { ...DEFAULT_SETTINGS }
   }
 }
 
 export function saveSettings(settings: Settings): void {
-  writeFileSync(getSettingsPath(), JSON.stringify(settings, null, 2));
+  writeFileSync(getSettingsPath(), JSON.stringify(settings, null, 2))
 }
