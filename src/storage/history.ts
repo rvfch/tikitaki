@@ -37,3 +37,19 @@ export function updateEntry(id: string, updates: Partial<TimeEntry>): void {
 export function getUnsyncedEntries(target: 'jira' | 'clockify'): TimeEntry[] {
   return loadHistory().filter((e) => !e.synced[target])
 }
+
+export function removeEntry(id: string): boolean {
+  const entries = loadHistory()
+  const index = entries.findIndex((e) => e.id === id)
+  if (index === -1) return false
+  entries.splice(index, 1)
+  saveHistory(entries)
+  return true
+}
+
+export function removeAllEntries(): number {
+  const entries = loadHistory()
+  const count = entries.length
+  saveHistory([])
+  return count
+}

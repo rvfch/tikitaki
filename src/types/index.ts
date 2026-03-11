@@ -57,6 +57,7 @@ export type AppMode =
   | 'showing-history'
   | 'prompting-settings'
   | 'prompting-log'
+  | 'prompting-remove'
   | 'syncing'
   | 'showing-help'
 

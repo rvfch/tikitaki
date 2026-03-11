@@ -7,6 +7,7 @@ import { resumeTimer } from '../commands/resume.js'
 import { stopTimer } from '../commands/stop.js'
 import { getHistory } from '../commands/history.js'
 import { syncAll } from '../commands/sync.js'
+import { removeTimeEntry } from '../commands/remove.js'
 import { loadSettings } from '../storage/settings.js'
 import type {
   AppMode,
@@ -23,6 +24,7 @@ import HistoryTable from './HistoryTable.js'
 import SyncReport from './SyncReport.js'
 import SettingsPrompts from './SettingsPrompts.js'
 import LogEntryPrompts from './LogEntryPrompts.js'
+import RemoveEntrySelect from './RemoveEntrySelect.js'
 import SyncCheckTable from './SyncCheckTable.js'
 import type { SyncCheckResult } from '../commands/syncCheck.js'
 
@@ -135,41 +137,88 @@ export default function App() {
           break
         }
 
-        case 'log':
-          setMode('prompting-log')
+        case 'log': {
+          if (args) {
+            const { parseLogArgs, createLogEntry } =
+              await import('../commands/log.js')
+            const parsed = parseLogArgs(args)
+            if (parsed) {
+              const result = createLogEntry(parsed)
+              showMessage(result.message)
+            } else {
+              showMessage(
+                'Usage: /log <ticket> <duration> <from?> <description?> <to?>'
+              )
+            }
+          } else {
+            setMode('prompting-log')
+          }
           break
+        }
+
+        case 'remove': {
+          if (!subcommand && !args.trim()) {
+            setMode('prompting-remove')
+          } else {
+            const result = removeTimeEntry(subcommand, args)
+            showMessage(result.message)
+          }
+          break
+        }
 
         case 'settings':
-          if (!subcommand || subcommand === 'integrations') {
+          if (
+            !subcommand ||
+            subcommand === 'integrations' ||
+            subcommand === 'projects'
+          ) {
             setSettingsSubcommand(subcommand)
             setMode('prompting-settings')
           } else {
             showMessage(
-              `Unknown settings type: ${subcommand}. Use /settings or /settings:integrations.`
+              `Unknown settings type: ${subcommand}. Use /settings, /settings:integrations, or /settings:projects.`
             )
           }
           break
 
-        case 'sync':
+        case 'sync': {
+          const periodArgs = args.replace('--full', '').trim()
+          const period = (['today', 'week', 'month'] as const).find(
+            (p) => p === periodArgs
+          )
+          const periodLabel = period ? ` (${period})` : ''
+
           if (subcommand === 'check') {
-            showMessage('Checking sync status...')
+            showMessage(`Checking sync status${periodLabel}...`)
             const { checkSync } = await import('../commands/syncCheck.js')
-            const check = await checkSync()
+            const check = await checkSync(period)
             if (args.includes('--full')) {
               setSyncCheckData(check)
             } else {
               showMessage(
-                `Matched: ${check.matched.length}, Local only: ${check.localOnly.length}, Remote only: ${check.remoteOnly.length}`
+                `${periodLabel ? periodLabel.trim() + ' — ' : ''}Matched: ${check.matched.length}, Local only: ${check.localOnly.length}, Remote only: ${check.remoteOnly.length}`
               )
             }
+          } else if (subcommand === 'pull') {
+            showMessage(`Pulling from integrations${periodLabel}...`)
+            const { syncPull } = await import('../commands/syncPull.js')
+            const results = await syncPull(period)
+            const lines = results.map((r) => {
+              if (r.errors.length > 0) {
+                return `${r.source}: ${r.errors.join(', ')}`
+              }
+              return `${r.source}: ${r.imported} imported, ${r.skipped} skipped`
+            })
+            showMessage(lines.join('\n'))
           } else {
             setMode('syncing')
-            showMessage('Syncing...')
-            const results = await syncAll()
+            showMessage(`Syncing${periodLabel}...`)
+            const results = await syncAll(period)
             setSyncResults(results)
             setMode(timer ? 'timer-running' : 'idle')
           }
           break
+        }
 
         case 'quit':
           if (timer) {
@@ -187,7 +236,9 @@ export default function App() {
   )
 
   const isInputActive =
-    mode !== 'prompting-settings' && mode !== 'prompting-log'
+    mode !== 'prompting-settings' &&
+    mode !== 'prompting-log' &&
+    mode !== 'prompting-remove'
 
   return (
     <Box flexDirection='column'>
@@ -214,6 +265,10 @@ export default function App() {
 
       {mode === 'prompting-log' ? (
         <LogEntryPrompts onDone={handlePromptDone} />
+      ) : null}
+
+      {mode === 'prompting-remove' ? (
+        <RemoveEntrySelect onDone={handlePromptDone} />
       ) : null}
 
       {syncCheckData ? <SyncCheckTable data={syncCheckData} /> : null}
