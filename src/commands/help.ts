@@ -14,6 +14,7 @@ export const HELP_TEXT = `Commands:
   /log <ticket> <duration>       Quick log (e.g. /log XXX-123 1h30m)
   /log <ticket> <dur> <from>     With start time (e.g. /log XXX-123 2h 09:00)
   /log <ticket> <dur> <from> <desc> <to>
+  /remove                        Interactive multi-select to remove entries
   /remove <id>                   Remove a time entry (use first 8 chars of ID)
   /remove:all                    Remove all time entries
 

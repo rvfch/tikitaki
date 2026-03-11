@@ -62,27 +62,37 @@ Once running, type `/help` to see all commands.
 ## Commands
 
 ```
-/start <ticket> <description>     Start a timer
-/pause                             Pause the current timer
-/resume                            Resume a paused timer
-/stop                              Stop and save the current timer
-/stop:discard                      Stop and discard (don't save)
+/start <ticket> <description>      Start a timer
+/pause                              Pause the current timer
+/resume                             Resume a paused timer
+/stop                               Stop and save the current timer
+/stop:discard                       Stop and discard the current timer
 
-/history                           Show today's entries
-/history:week                      Show this week's entries
-/history:month                     Show this month's entries
-/history <YYYY-MM-DD>              Show entries for a specific date
+/history                            Show today's entries
+/history:week                       Show this week's entries
+/history:month                      Show this month's entries
+/history <YYYY-MM-DD>               Show entries for a specific date
 
-/log                               Manually log a time entry
-/sync                              Sync unsynced entries to integrations
-/sync:check                        Compare local vs remote entries
-/sync:check --full                 Full table of all local/remote entries
+/log                                Manually log a time entry (interactive)
+/log <ticket> <duration>            Quick log (e.g. /log XXX-123 1h30m)
+/log <ticket> <dur> <from>          With start time (e.g. /log XXX-123 2h 09:00)
+/log <ticket> <dur> <from> <desc> <to>
 
-/settings                          Open settings menu
-/settings:integrations             Configure Jira / Clockify
+/remove                             Interactive multi-select to remove entries
+/remove <id>                        Remove a time entry (use first 8 chars of ID)
+/remove:all                         Remove all time entries
 
-/help                              Show help
-/quit                              Exit
+/sync [today|week|month]            Sync unsynced entries to integrations
+/sync:pull [today|week|month]       Import entries from integrations
+/sync:check [today|week|month]      Compare local vs remote entries
+/sync:check --full [period]         Full table of all local/remote entries
+
+/settings                           Open settings menu
+/settings:integrations              Configure Jira/Clockify integrations
+/settings:projects                  Manage project mappings
+
+/help                               Show this help message
+/quit                               Exit the application
 ```
 
 ## Integrations
