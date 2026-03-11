@@ -3,6 +3,11 @@ import type { RemoteWorklog } from './types.js'
 
 const BASE_URL = 'https://api.clockify.me/api/v1'
 
+function extractTicket(description: string): string {
+  const match = description.match(/\[?([A-Z][A-Z0-9]+-\d+)\]?/)
+  return match ? match[1] : description.split(' ')[0] || ''
+}
+
 export async function syncToClockify(
   entry: TimeEntry,
   config: ClockifyConfig
@@ -87,7 +92,7 @@ export async function getClockifyEntries(
     const start = new Date(e.timeInterval.start)
     const end = new Date(e.timeInterval.end)
     const duration = Math.floor((end.getTime() - start.getTime()) / 1000)
-    const ticket = e.description.split(' ')[0] || ''
+    const ticket = extractTicket(e.description)
 
     return {
       source: 'clockify' as const,
