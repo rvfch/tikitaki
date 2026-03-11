@@ -28,11 +28,11 @@ npm test             # Vitest tests
 
 ## Module Layout
 
-- `src/commands/` -- Pure logic for each command (start, pause, resume, stop, history, log, sync, syncCheck, settings, help). Each returns a result object.
+- `src/commands/` -- Pure logic for each command (start, pause, resume, stop, history, log, remove, sync, syncCheck, syncPull, settings, help). Each returns a result object.
 - `src/components/` -- React/Ink UI components. App.tsx is the root with state machine + command dispatch.
 - `src/storage/` -- File I/O for history.json and settings.json in ~/.cli-timer/
 - `src/integrations/` -- Jira REST API (Basic auth, ADF comments) and Clockify API (X-Api-Key header)
-- `src/utils/` -- formatDuration (seconds -> "1h 23m 45s"), formatDate helpers, dateFilters (today/week/month/date + groupByDate)
+- `src/utils/` -- formatDuration (seconds -> "1h 23m 45s"), formatTimer (HH:MM:SS), parseDurationInput, formatDate helpers, dateFilters (today/week/month/date + groupByDate)
 
 ## Timer Logic
 
@@ -40,7 +40,7 @@ Elapsed time = (now - startTime) - sum(pause durations). Pause durations include
 
 ## Testing
 
-11 test files, 63 tests in `src/__tests__/`. Tests use `vi.mock()` for storage paths (temp dirs) and `vi.stubGlobal("fetch")` for integration tests. All command/util/storage/integration logic is tested. UI components are not tested.
+11 test files, 70 tests in `src/__tests__/`. Tests use `vi.mock()` for storage paths (temp dirs) and `vi.stubGlobal("fetch")` for integration tests. All command/util/storage/integration logic is tested. UI components are not tested.
 
 ## Conventions
 
