@@ -1,7 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/React_(Ink)-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="docs/assets/logo.png" alt="tikitaki logo" width="128" />
 </p>
 
 <h1 align="center">
@@ -10,6 +8,12 @@
   <br>
   <sub><sup>Track work time without leaving your terminal</sup></sub>
 </h1>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/React_(Ink)-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+</p>
 
 <p align="center">
   An interactive CLI timer with a REPL-like interface for tracking work time, with Jira and Clockify sync built in.
