@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { Box, Text, useInput } from 'ink'
-import TextInput from 'ink-text-input'
+import TextInputEnhanced from './TextInputEnhanced.js'
 
 interface CommandInputProps {
   onSubmit: (value: string) => void
@@ -56,7 +56,11 @@ export default function CommandInput({
         {'❯ '}
       </Text>
       {isActive ? (
-        <TextInput value={value} onChange={setValue} onSubmit={handleSubmit} />
+        <TextInputEnhanced
+          value={value}
+          onChange={setValue}
+          onSubmit={handleSubmit}
+        />
       ) : (
         <Text dimColor>waiting...</Text>
       )}

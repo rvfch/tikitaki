@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Box, Text } from 'ink'
-import { formatDuration } from '../utils/formatDuration.js'
+import { formatTimer } from '../utils/formatDuration.js'
 import { calculateElapsed } from '../commands/stop.js'
 import type { ActiveTimer } from '../types/index.js'
 
@@ -22,23 +22,37 @@ export default function TimerDisplay({ timer, isPaused }: TimerDisplayProps) {
     return () => clearInterval(interval)
   }, [timer, isPaused])
 
-  // Recalculate on every tick or when pause state changes
   void tick
   const elapsed = calculateElapsed(timer)
+  const timeStr = formatTimer(elapsed)
+  const color = isPaused ? 'yellow' : 'green'
 
   return (
-    <Box flexDirection='column'>
-      <Box>
+    <Box
+      flexDirection='column'
+      borderStyle='round'
+      borderColor={color}
+      paddingX={2}
+    >
+      <Box justifyContent='center'>
         <Text bold color='cyan'>
           {timer.ticket}
         </Text>
-        {timer.description ? <Text> - {timer.description}</Text> : null}
+        {timer.description ? (
+          <Text dimColor> — {timer.description}</Text>
+        ) : null}
+        {timer.project ? <Text color='magenta'> [{timer.project}]</Text> : null}
       </Box>
-      <Box>
-        <Text color={isPaused ? 'yellow' : 'green'} bold>
-          {formatDuration(elapsed)}
+      <Box justifyContent='center'>
+        <Text color={color} bold>
+          {timeStr}
         </Text>
-        {isPaused ? <Text color='yellow'> (paused)</Text> : null}
+        {isPaused ? (
+          <Text color='yellow' bold>
+            {' '}
+            ⏸ PAUSED
+          </Text>
+        ) : null}
       </Box>
     </Box>
   )

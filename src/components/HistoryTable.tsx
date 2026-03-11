@@ -1,4 +1,3 @@
-import React from 'react'
 import { Box, Text } from 'ink'
 import { formatDuration } from '../utils/formatDuration.js'
 import { formatTime } from '../utils/formatDate.js'
@@ -57,7 +56,11 @@ export default function HistoryTable({
             </Box>
             {dayEntries.map((entry) => (
               <Box key={entry.id} paddingLeft={2}>
+                <Text dimColor>{entry.id.slice(0, 8)} </Text>
                 <Text color='cyan'>{entry.ticket.padEnd(12)}</Text>
+                {entry.project ? (
+                  <Text color='magenta'>[{entry.project}] </Text>
+                ) : null}
                 <Text>
                   {formatTime(entry.startTime)}-{formatTime(entry.endTime)}
                 </Text>

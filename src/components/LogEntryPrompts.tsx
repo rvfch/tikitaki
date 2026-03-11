@@ -1,10 +1,9 @@
 import { useState, useRef } from 'react'
 import { Box, Text } from 'ink'
-import TextInput from 'ink-text-input'
+import TextInputEnhanced from './TextInputEnhanced.js'
 import { createLogEntry } from '../commands/log.js'
-import { format } from 'date-fns'
 
-type Step = 'ticket' | 'description' | 'date' | 'start' | 'end'
+type Step = 'ticket' | 'duration' | 'from' | 'to' | 'description'
 
 interface LogEntryPromptsProps {
   onDone: (message: string) => void
@@ -14,11 +13,8 @@ export default function LogEntryPrompts({ onDone }: LogEntryPromptsProps) {
   const [step, setStep] = useState<Step>('ticket')
   const [input, setInput] = useState('')
   const ticket = useRef('')
-  const description = useRef('')
-  const date = useRef('')
-  const startTime = useRef('')
-
-  const today = format(new Date(), 'yyyy-MM-dd')
+  const duration = useRef('')
+  const from = useRef('')
 
   const handleSubmit = (val: string) => {
     const v = val.trim()
@@ -31,27 +27,40 @@ export default function LogEntryPrompts({ onDone }: LogEntryPromptsProps) {
           return
         }
         ticket.current = v
+        setStep('duration')
+        break
+      case 'duration':
+        if (!v) {
+          onDone('Log cancelled - duration is required.')
+          return
+        }
+        duration.current = v
+        setStep('from')
+        break
+      case 'from':
+        from.current = v
+        if (v) {
+          setStep('to')
+        } else {
+          setStep('description')
+        }
+        break
+      case 'to':
+        // v is optional end time
         setStep('description')
+        // store end time temporarily
+        from.current = from.current + (v ? `|${v}` : '')
         break
-      case 'description':
-        description.current = v
-        setStep('date')
-        break
-      case 'date':
-        date.current = v || today
-        setStep('start')
-        break
-      case 'start':
-        startTime.current = v
-        setStep('end')
-        break
-      case 'end': {
+      case 'description': {
+        const parts = from.current.split('|')
+        const startTime = parts[0] || undefined
+        const endTime = parts[1] || undefined
         const result = createLogEntry({
           ticket: ticket.current,
-          description: description.current,
-          date: date.current || today,
-          startTime: startTime.current,
-          endTime: v,
+          duration: duration.current,
+          startTime,
+          endTime,
+          description: v,
         })
         onDone(result.message)
         break
@@ -61,10 +70,10 @@ export default function LogEntryPrompts({ onDone }: LogEntryPromptsProps) {
 
   const prompts: Record<Step, string> = {
     ticket: 'Ticket:',
+    duration: 'Duration (e.g. 1h 30m, 2:30):',
+    from: 'From (HH:mm, optional):',
+    to: 'To (HH:mm, optional):',
     description: 'Description (optional):',
-    date: `Date (${today}):`,
-    start: 'Start time (HH:mm):',
-    end: 'End time (HH:mm):',
   }
 
   return (
@@ -74,7 +83,7 @@ export default function LogEntryPrompts({ onDone }: LogEntryPromptsProps) {
         <Text color='green' bold>
           {'❯ '}
         </Text>
-        <TextInput
+        <TextInputEnhanced
           key={step}
           value={input}
           onChange={setInput}
