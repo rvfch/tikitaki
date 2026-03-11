@@ -8,6 +8,7 @@ import {
   parseISO,
   isWithinInterval,
   parse,
+  format,
 } from 'date-fns'
 import type { TimeEntry } from '../types/index.js'
 
@@ -47,10 +48,37 @@ export function filterDate(entries: TimeEntry[], dateStr: string): TimeEntry[] {
   )
 }
 
+export type Period = 'today' | 'week' | 'month'
+
+export function getDateRange(period: Period): { start: Date; end: Date } {
+  const now = new Date()
+  switch (period) {
+    case 'today':
+      return { start: startOfDay(now), end: endOfDay(now) }
+    case 'week':
+      return {
+        start: startOfWeek(now, { weekStartsOn: 1 }),
+        end: endOfWeek(now, { weekStartsOn: 1 }),
+      }
+    case 'month':
+      return { start: startOfMonth(now), end: endOfMonth(now) }
+  }
+}
+
+export function filterByPeriod(
+  entries: TimeEntry[],
+  period: Period
+): TimeEntry[] {
+  const { start, end } = getDateRange(period)
+  return entries.filter((e) =>
+    isWithinInterval(parseISO(e.startTime), { start, end })
+  )
+}
+
 export function groupByDate(entries: TimeEntry[]): Record<string, TimeEntry[]> {
   const groups: Record<string, TimeEntry[]> = {}
   for (const entry of entries) {
-    const date = parseISO(entry.startTime).toISOString().split('T')[0]
+    const date = format(parseISO(entry.startTime), 'yyyy-MM-dd')
     if (!groups[date]) groups[date] = []
     groups[date].push(entry)
   }

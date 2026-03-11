@@ -2,14 +2,17 @@ import { getUnsyncedEntries, updateEntry } from '../storage/history.js'
 import { loadSettings } from '../storage/settings.js'
 import { syncToJira } from '../integrations/jira.js'
 import { syncToClockify } from '../integrations/clockify.js'
+import { filterByPeriod } from '../utils/dateFilters.js'
+import type { Period } from '../utils/dateFilters.js'
 import type { SyncResult } from '../types/index.js'
 
-export async function syncAll(): Promise<SyncResult[]> {
+export async function syncAll(period?: Period): Promise<SyncResult[]> {
   const settings = loadSettings()
   const results: SyncResult[] = []
 
   if (settings.integrations.jira) {
-    const entries = getUnsyncedEntries('jira')
+    let entries = getUnsyncedEntries('jira')
+    if (period) entries = filterByPeriod(entries, period)
     for (const entry of entries) {
       const result = await syncToJira(entry, settings.integrations.jira)
       if (result.success) {
@@ -22,7 +25,8 @@ export async function syncAll(): Promise<SyncResult[]> {
   }
 
   if (settings.integrations.clockify) {
-    const entries = getUnsyncedEntries('clockify')
+    let entries = getUnsyncedEntries('clockify')
+    if (period) entries = filterByPeriod(entries, period)
     for (const entry of entries) {
       const result = await syncToClockify(entry, settings.integrations.clockify)
       if (result.success) {

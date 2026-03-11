@@ -11,3 +11,11 @@ export function formatDateOnly(isoString: string): string {
 export function formatTime(isoString: string): string {
   return format(parseISO(isoString), 'HH:mm')
 }
+
+export function toLocalDateStr(date: Date): string {
+  return format(date, 'yyyy-MM-dd')
+}
+
+export function entryLocalDate(isoString: string): string {
+  return format(parseISO(isoString), 'yyyy-MM-dd')
+}
