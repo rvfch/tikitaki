@@ -37,6 +37,56 @@ describe('startTimer', () => {
     const result = startTimer('', null)
     expect(result.success).toBe(false)
   })
+
+  describe('with custom start time', () => {
+    beforeEach(() => vi.useFakeTimers())
+    afterEach(() => vi.useRealTimers())
+
+    it('starts timer from a past time', () => {
+      vi.setSystemTime(new Date('2026-03-12T10:30:00'))
+      const result = startTimer('TICK-1 my task 10:00', null)
+      expect(result.success).toBe(true)
+      expect(result.timer?.ticket).toBe('TICK-1')
+      expect(result.timer?.description).toBe('my task')
+      const startDate = new Date(result.timer!.startTime)
+      expect(startDate.getHours()).toBe(10)
+      expect(startDate.getMinutes()).toBe(0)
+      expect(result.message).toContain('(from 10:00)')
+    })
+
+    it('starts timer with time only, no description', () => {
+      vi.setSystemTime(new Date('2026-03-12T10:30:00'))
+      const result = startTimer('TICK-1 10:00', null)
+      expect(result.success).toBe(true)
+      expect(result.timer?.description).toBe('')
+      const startDate = new Date(result.timer!.startTime)
+      expect(startDate.getHours()).toBe(10)
+      expect(startDate.getMinutes()).toBe(0)
+    })
+
+    it('fails if start time is in the future', () => {
+      vi.setSystemTime(new Date('2026-03-12T10:30:00'))
+      const result = startTimer('TICK-1 10:40', null)
+      expect(result.success).toBe(false)
+      expect(result.message).toContain('future')
+    })
+
+    it('fails with invalid time format', () => {
+      vi.setSystemTime(new Date('2026-03-12T10:30:00'))
+      const result = startTimer('TICK-1 25:00', null)
+      expect(result.success).toBe(false)
+      expect(result.message).toContain('Invalid time')
+    })
+
+    it('accepts single-digit hour', () => {
+      vi.setSystemTime(new Date('2026-03-12T10:30:00'))
+      const result = startTimer('TICK-1 9:15', null)
+      expect(result.success).toBe(true)
+      const startDate = new Date(result.timer!.startTime)
+      expect(startDate.getHours()).toBe(9)
+      expect(startDate.getMinutes()).toBe(15)
+    })
+  })
 })
 
 describe('pauseTimer', () => {

@@ -1,5 +1,5 @@
 export const HELP_TEXT = `Commands:
-  /start <ticket> <description>  Start a timer
+  /start <ticket> [desc] [HH:MM] Start a timer (optional past start time)
   /pause                         Pause the current timer
   /resume                        Resume a paused timer
   /stop                          Stop and save the current timer
