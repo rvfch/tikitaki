@@ -23,12 +23,9 @@
 
 <br>
 
-```
-  TEST-123 - Implement auth flow
-  1h 23m 45s
-  [RUNNING] TEST-123
-  > /pause
-```
+<center>
+  <img src="docs/assets/app.png" alt="tikitaki" />
+</center>
 
 ---
 
@@ -55,8 +52,11 @@
 # Install dependencies
 npm install
 
-# Run in dev mode
-npm run dev
+# Build
+npm run build
+
+# Start
+npm start
 ```
 
 Once running, type `/help` to see all commands.
