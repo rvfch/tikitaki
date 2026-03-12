@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/assets/logo.png" alt="tikitaki logo" width="128" />
-</p>
-
 <h1 align="center">
   <br>
   <code>tikitaki</code>
