@@ -15,9 +15,7 @@ function buildAdfComment(description: string) {
     content: [
       {
         type: 'paragraph',
-        content: [
-          { type: 'text', text: description || 'Logged via cli-timer' },
-        ],
+        content: [{ type: 'text', text: description ?? '' }],
       },
     ],
   }

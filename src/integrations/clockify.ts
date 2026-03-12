@@ -20,6 +20,7 @@ export async function syncToClockify(
       start: entry.startTime,
       end: entry.endTime,
       description: `${entry.ticket} ${entry.description}`.trim(),
+      billable: true,
     }
 
     if (projectId) {
