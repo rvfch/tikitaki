@@ -15,7 +15,7 @@ const { createLogEntry, parseLogArgs } = await import('../commands/log.js')
 
 describe('createLogEntry', () => {
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), 'cli-timer-test-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'tikitaki-test-'))
   })
 
   afterEach(() => {

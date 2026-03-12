@@ -28,7 +28,7 @@ await import('../integrations/clockify.js')
 
 describe('syncAll', () => {
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), 'cli-timer-test-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'tikitaki-test-'))
   })
 
   afterEach(() => {

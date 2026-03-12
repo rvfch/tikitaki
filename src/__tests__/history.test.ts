@@ -18,7 +18,7 @@ const { loadHistory, saveHistory, addEntry } =
 
 describe('history storage', () => {
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), 'cli-timer-test-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'tikitaki-test-'))
   })
 
   afterEach(() => {

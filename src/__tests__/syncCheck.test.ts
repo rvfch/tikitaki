@@ -26,7 +26,7 @@ const { getJiraWorklogs } = await import('../integrations/jira.js')
 
 describe('checkSync', () => {
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), 'cli-timer-test-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'tikitaki-test-'))
   })
 
   afterEach(() => {

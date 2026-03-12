@@ -2,7 +2,7 @@ import { mkdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { homedir } from 'node:os'
 
-const CLI_TIMER_DIR = join(homedir(), '.cli-timer')
+const CLI_TIMER_DIR = join(homedir(), '.tikitaki')
 
 export function getDataDir(): string {
   if (!existsSync(CLI_TIMER_DIR)) {

@@ -120,7 +120,7 @@ Project mappings link your ticket prefixes (e.g. `TEST`) to Clockify project IDs
 
 ## Data Storage
 
-All data lives in `~/.cli-timer/`:
+All data lives in `~/.tikitaki/`:
 
 | File            | Contents                                                             |
 | --------------- | -------------------------------------------------------------------- |

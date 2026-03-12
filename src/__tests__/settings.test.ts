@@ -15,7 +15,7 @@ const { loadSettings, saveSettings } = await import('../storage/settings.js')
 
 describe('settings storage', () => {
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), 'cli-timer-test-'))
+    tempDir = mkdtempSync(join(tmpdir(), 'tikitaki-test-'))
   })
 
   afterEach(() => {

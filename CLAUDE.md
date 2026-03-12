@@ -16,7 +16,7 @@ npm test             # Vitest tests
 - **Ink (React for CLI)** renders a REPL-like terminal UI with live-updating timer
 - **State machine** in `src/components/App.tsx` manages app modes: idle, timer-running, timer-paused, showing-history, prompting-settings, prompting-log, syncing, showing-help
 - **Slash commands** parsed by `src/commands/parser.ts` -- format: `/command:subcommand args`
-- **Data stored** as JSON in `~/.cli-timer/` (history.json, settings.json)
+- **Data stored** as JSON in `~/.tikitaki/` (history.json, settings.json)
 
 ## Key Types (src/types/index.ts)
 
@@ -30,7 +30,7 @@ npm test             # Vitest tests
 
 - `src/commands/` -- Pure logic for each command (start, pause, resume, stop, history, log, remove, sync, syncCheck, syncPull, settings, help). Each returns a result object.
 - `src/components/` -- React/Ink UI components. App.tsx is the root with state machine + command dispatch.
-- `src/storage/` -- File I/O for history.json and settings.json in ~/.cli-timer/
+- `src/storage/` -- File I/O for history.json and settings.json in ~/.tikitaki/
 - `src/integrations/` -- Jira REST API (Basic auth, ADF comments) and Clockify API (X-Api-Key header)
 - `src/utils/` -- formatDuration (seconds -> "1h 23m 45s"), formatTimer (HH:MM:SS), parseDurationInput, formatDate helpers, dateFilters (today/week/month/date + groupByDate)
 
