@@ -23,9 +23,9 @@
 
 <br>
 
-<center>
+<p align="center">
   <img src="docs/assets/app.png" alt="tikitaki" />
-</center>
+</p>
 
 ---
 
