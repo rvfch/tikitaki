@@ -147,7 +147,7 @@ export default function App() {
               showMessage(result.message)
             } else {
               showMessage(
-                'Usage: /log <ticket> <duration> <from?> <description?> <to?>'
+                'Usage: /log [date] <ticket> <duration> <from?> <description?> <to?>'
               )
             }
           } else {

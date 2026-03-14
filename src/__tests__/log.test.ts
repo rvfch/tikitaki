@@ -88,6 +88,44 @@ describe('createLogEntry', () => {
     })
     expect(result.entry?.project).toBe('CUSTOM')
   })
+
+  it('creates a log entry with date and start/end times', () => {
+    const result = createLogEntry({
+      ticket: 'TEST-1',
+      date: '2025-03-10',
+      startTime: '09:00',
+      endTime: '11:00',
+    })
+    expect(result.success).toBe(true)
+    expect(result.entry?.duration).toBe(7200)
+    expect(result.entry?.startTime).toContain('2025-03-10')
+    expect(result.entry?.endTime).toContain('2025-03-10')
+  })
+
+  it('creates a log entry with date and duration only (end of day)', () => {
+    const result = createLogEntry({
+      ticket: 'TEST-1',
+      date: '2025-03-10',
+      duration: '1h',
+    })
+    expect(result.success).toBe(true)
+    expect(result.entry?.duration).toBe(3600)
+    expect(result.entry?.startTime).toContain('2025-03-10')
+    expect(result.entry?.endTime).toContain('2025-03-10')
+    expect(new Date(result.entry!.endTime).getTime()).toBe(
+      new Date(result.entry!.startTime).getTime() + 3600 * 1000
+    )
+  })
+
+  it('fails with invalid date', () => {
+    const result = createLogEntry({
+      ticket: 'TEST-1',
+      date: 'not-a-date',
+      duration: '1h',
+    })
+    expect(result.success).toBe(false)
+    expect(result.message).toContain('Invalid date')
+  })
 })
 
 describe('parseLogArgs', () => {
@@ -125,5 +163,21 @@ describe('parseLogArgs', () => {
 
   it('returns null for invalid duration', () => {
     expect(parseLogArgs('XXX-123 notaduration')).toBeNull()
+  })
+
+  it('parses leading date with ticket and duration', () => {
+    const result = parseLogArgs('2025-03-10 PROJ-123 2h')
+    expect(result).toEqual({
+      ticket: 'PROJ-123',
+      duration: '2h',
+      date: '2025-03-10',
+    })
+  })
+
+  it('parses without date (date optional)', () => {
+    const result = parseLogArgs('PROJ-123 2h')
+    expect(result?.ticket).toBe('PROJ-123')
+    expect(result?.duration).toBe('2h')
+    expect(result).not.toHaveProperty('date')
   })
 })
