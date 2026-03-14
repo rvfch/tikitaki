@@ -68,7 +68,7 @@ export function createLogEntry(input: LogInput): LogResult {
     if (duration <= 0) {
       return {
         success: false,
-        message: 'Invalid duration. Use format like "1h 30m" or "2:30".',
+        message: 'Invalid duration. Use format like "1h 30m", "2:30", or "1:30:45".',
       }
     }
     const startDate = input.startTime.includes('-')
@@ -82,7 +82,7 @@ export function createLogEntry(input: LogInput): LogResult {
     if (duration <= 0) {
       return {
         success: false,
-        message: 'Invalid duration. Use format like "1h 30m" or "2:30".',
+        message: 'Invalid duration. Use format like "1h 30m", "2:30", or "1:30:45".',
       }
     }
     if (input.date) {

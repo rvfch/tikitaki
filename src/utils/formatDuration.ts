@@ -39,6 +39,16 @@ export function parseDurationInput(input: string): number | null {
     return total > 0 ? total : null
   }
 
+  // Try "HH:MM:SS" or "H:MM:SS" format
+  const colonSecondsMatch = trimmed.match(/^(\d{1,2}):(\d{2}):(\d{2})$/)
+  if (colonSecondsMatch) {
+    const h = parseInt(colonSecondsMatch[1], 10)
+    const m = parseInt(colonSecondsMatch[2], 10)
+    const s = parseInt(colonSecondsMatch[3], 10)
+    const total = h * 3600 + m * 60 + s
+    return total > 0 ? total : null
+  }
+
   // Try "HH:MM" or "H:MM" format
   const colonMatch = trimmed.match(/^(\d{1,2}):(\d{2})$/)
   if (colonMatch) {

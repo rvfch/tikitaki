@@ -76,7 +76,7 @@ export default function LogEntryPrompts({ onDone }: LogEntryPromptsProps) {
 
   const prompts: Record<Step, string> = {
     ticket: 'Ticket:',
-    duration: 'Duration (e.g. 1h 30m, 2:30):',
+    duration: 'Duration (e.g. 1h 30m, 2:30, 1:30:45):',
     date: 'Date (yyyy-MM-dd or Enter for today):',
     from: 'From (HH:mm, optional):',
     to: 'To (HH:mm, optional):',

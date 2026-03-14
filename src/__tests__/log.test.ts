@@ -54,6 +54,15 @@ describe('createLogEntry', () => {
     expect(result.entry?.duration).toBe(7200)
   })
 
+  it('creates a log entry with duration including seconds', () => {
+    const result = createLogEntry({
+      ticket: 'TEST-1',
+      duration: '1h 30m 45s',
+    })
+    expect(result.success).toBe(true)
+    expect(result.entry?.duration).toBe(5445)
+  })
+
   it('fails with missing ticket', () => {
     const result = createLogEntry({
       ticket: '',

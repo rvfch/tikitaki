@@ -11,7 +11,7 @@ export const HELP_TEXT = `Commands:
   /history <date>                Show entries for a specific date (YYYY-MM-DD)
 
   /log                           Manually log a time entry (interactive)
-  /log [date] <ticket> <duration>  Quick log; date optional (e.g. /log 2025-03-10 XXX-123 1h30m)
+  /log [date] <ticket> <duration>  Quick log; duration: 1h30m, 2:30, 1:30:45
   /log [date] <ticket> <dur> <from>     With start time
   /log [date] <ticket> <dur> <from> <desc> <to>
   /remove                        Interactive multi-select to remove entries

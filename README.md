@@ -74,7 +74,7 @@ Once running, type `/help` to see all commands.
 /history <YYYY-MM-DD>               Show entries for a specific date
 
 /log                                Manually log a time entry (interactive)
-/log [date] <ticket> <duration>     Quick log; optional date YYYY-MM-DD to backdate (e.g. /log 2025-03-10 XXX-123 1h30m)
+/log [date] <ticket> <duration>     Quick log; duration: 1h30m, 2:30, 1:30:45; optional date YYYY-MM-DD
 /log [date] <ticket> <dur> <from>   With start time
 /log [date] <ticket> <dur> <from> <desc> <to>
 
