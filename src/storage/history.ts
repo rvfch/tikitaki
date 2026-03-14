@@ -35,7 +35,7 @@ export function updateEntry(id: string, updates: Partial<TimeEntry>): void {
 }
 
 export function getUnsyncedEntries(target: 'jira' | 'clockify'): TimeEntry[] {
-  return loadHistory().filter((e) => !e.synced[target])
+  return loadHistory().filter((e) => !e.synced?.[target])
 }
 
 export function removeEntry(id: string): boolean {

@@ -6,16 +6,19 @@ import { pauseTimer } from '../commands/pause.js'
 import { resumeTimer } from '../commands/resume.js'
 import { stopTimer } from '../commands/stop.js'
 import { getHistory } from '../commands/history.js'
-import { syncAll } from '../commands/sync.js'
+import { syncAll, getSyncPreviewWithRemoteCheck } from '../commands/sync.js'
+import { updateEntry } from '../storage/history.js'
 import { removeTimeEntry } from '../commands/remove.js'
 import { loadSettings } from '../storage/settings.js'
 import type {
   AppMode,
   ActiveTimer,
   SyncResult,
+  SyncPreviewWithRemote,
   TimeEntry,
 } from '../types/index.js'
 import type { HistoryFilter } from '../commands/history.js'
+import type { Period } from '../utils/dateFilters.js'
 import CommandInput from './CommandInput.js'
 import TimerDisplay from './TimerDisplay.js'
 import StatusBar from './StatusBar.js'
@@ -25,6 +28,7 @@ import SyncReport from './SyncReport.js'
 import SettingsPrompts from './SettingsPrompts.js'
 import LogEntryPrompts from './LogEntryPrompts.js'
 import RemoveEntrySelect from './RemoveEntrySelect.js'
+import SyncConfirmPrompt from './SyncConfirmPrompt.js'
 import SyncCheckTable from './SyncCheckTable.js'
 import type { SyncCheckResult } from '../commands/syncCheck.js'
 
@@ -47,6 +51,10 @@ export default function App() {
   const [syncCheckData, setSyncCheckData] = useState<SyncCheckResult | null>(
     null
   )
+  const [syncPreview, setSyncPreview] = useState<{
+    data: SyncPreviewWithRemote
+    period: Period | undefined
+  } | null>(null)
 
   const showMessage = (msg: string) => setMessage(msg)
 
@@ -64,6 +72,47 @@ export default function App() {
     [timer]
   )
 
+  const handleSyncConfirm = useCallback(
+    async (yes: boolean) => {
+      const pending = syncPreview
+      setSyncPreview(null)
+      setMode(timer ? 'timer-running' : 'idle')
+      if (!yes) {
+        showMessage('Sync cancelled.')
+        return
+      }
+      if (!pending) return
+      const { data } = pending
+      for (const entry of data.alreadyOnRemote.jira) {
+        updateEntry(entry.id, {
+          synced: { ...entry.synced, jira: true },
+        })
+      }
+      for (const entry of data.alreadyOnRemote.clockify) {
+        updateEntry(entry.id, {
+          synced: { ...entry.synced, clockify: true },
+        })
+      }
+      const toSyncTotal = data.toSync.jira.length + data.toSync.clockify.length
+      const alreadyTotal =
+        data.alreadyOnRemote.jira.length + data.alreadyOnRemote.clockify.length
+      if (toSyncTotal === 0) {
+        showMessage(
+          alreadyTotal > 0
+            ? 'No new entries to sync (already on remote were marked synced).'
+            : 'Nothing to sync.'
+        )
+        return
+      }
+      setMode('syncing')
+      showMessage('Syncing...')
+      const results = await syncAll(pending.period)
+      setSyncResults(results)
+      setMode(timer ? 'timer-running' : 'idle')
+    },
+    [syncPreview, timer]
+  )
+
   const handleCommand = useCallback(
     async (input: string) => {
       const parsed = parseCommand(input)
@@ -77,6 +126,7 @@ export default function App() {
       setHistoryData(null)
       setSyncResults(null)
       setSyncCheckData(null)
+      setSyncPreview(null)
 
       switch (command) {
         case 'help':
@@ -211,11 +261,24 @@ export default function App() {
             })
             showMessage(lines.join('\n'))
           } else {
-            setMode('syncing')
-            showMessage(`Syncing${periodLabel}...`)
-            const results = await syncAll(period)
-            setSyncResults(results)
-            setMode(timer ? 'timer-running' : 'idle')
+            showMessage('Fetching remote entries...')
+            const data = await getSyncPreviewWithRemoteCheck(period)
+            if (data.noIntegrations) {
+              showMessage(
+                'No integrations configured. Use /settings:integrations first.'
+              )
+            } else if (
+              data.toSync.jira.length === 0 &&
+              data.toSync.clockify.length === 0 &&
+              data.alreadyOnRemote.jira.length === 0 &&
+              data.alreadyOnRemote.clockify.length === 0
+            ) {
+              showMessage('Nothing to sync.')
+            } else {
+              setMessage(null)
+              setSyncPreview({ data, period })
+              setMode('prompting-sync-confirm')
+            }
           }
           break
         }
@@ -238,7 +301,8 @@ export default function App() {
   const isInputActive =
     mode !== 'prompting-settings' &&
     mode !== 'prompting-log' &&
-    mode !== 'prompting-remove'
+    mode !== 'prompting-remove' &&
+    mode !== 'prompting-sync-confirm'
 
   return (
     <Box flexDirection='column'>
@@ -269,6 +333,18 @@ export default function App() {
 
       {mode === 'prompting-remove' ? (
         <RemoveEntrySelect onDone={handlePromptDone} />
+      ) : null}
+
+      {mode === 'prompting-sync-confirm' && syncPreview ? (
+        <SyncConfirmPrompt
+          data={{
+            toSync: syncPreview.data.toSync,
+            alreadyOnRemote: syncPreview.data.alreadyOnRemote,
+            fetchError: syncPreview.data.fetchError,
+          }}
+          periodLabel={syncPreview.period ? ` (${syncPreview.period})` : ''}
+          onConfirm={handleSyncConfirm}
+        />
       ) : null}
 
       {syncCheckData ? <SyncCheckTable data={syncCheckData} /> : null}

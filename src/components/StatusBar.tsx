@@ -15,6 +15,7 @@ const MODE_LABELS: Record<AppMode, { label: string; color: string }> = {
   'prompting-settings': { label: 'SETTINGS', color: 'magenta' },
   'prompting-log': { label: 'LOG', color: 'magenta' },
   'prompting-remove': { label: 'REMOVE', color: 'red' },
+  'prompting-sync-confirm': { label: 'SYNC', color: 'cyan' },
   syncing: { label: 'SYNCING', color: 'cyan' },
   'showing-help': { label: 'HELP', color: 'blue' },
 }

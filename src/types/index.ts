@@ -58,8 +58,22 @@ export type AppMode =
   | 'prompting-settings'
   | 'prompting-log'
   | 'prompting-remove'
+  | 'prompting-sync-confirm'
   | 'syncing'
   | 'showing-help'
+
+export interface SyncPreview {
+  jira: TimeEntry[]
+  clockify: TimeEntry[]
+  noIntegrations: boolean
+}
+
+export interface SyncPreviewWithRemote {
+  toSync: { jira: TimeEntry[]; clockify: TimeEntry[] }
+  alreadyOnRemote: { jira: TimeEntry[]; clockify: TimeEntry[] }
+  noIntegrations: boolean
+  fetchError?: string
+}
 
 export interface ParsedCommand {
   command: string
